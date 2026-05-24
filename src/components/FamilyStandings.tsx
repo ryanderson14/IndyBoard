@@ -26,13 +26,6 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
         </span>
       </div>
 
-      {/* Column header row */}
-      <div className="mb-1 grid grid-cols-[36px_1fr_56px] items-center gap-2 px-3 text-[9px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:grid-cols-[52px_1fr_92px] sm:gap-3 sm:text-[10px]">
-        <div>POS</div>
-        <div>Family · Driver</div>
-        <div className="text-right">Running</div>
-      </div>
-
       <ul className="space-y-1">
         {rows.map((row) => {
           const move = moves[row.player.id];
