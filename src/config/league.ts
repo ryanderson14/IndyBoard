@@ -43,16 +43,23 @@ export const LEAGUE: LeagueConfig = {
   // BIG FAMILY — one driver each. Only these drivers appear on the
   // Family Standings board. Add/remove freely.
   players: [
-    { id: "p-dad", name: "Dad", driverId: "car-12" },
-    { id: "p-mom", name: "Mom", driverId: "car-10" },
-    { id: "p-grandpa", name: "Grandpa", driverId: "car-9" },
-    { id: "p-grandma", name: "Grandma", driverId: "car-2" },
-    { id: "p-jen", name: "Aunt Jen", driverId: "car-5" },
-    { id: "p-mike", name: "Uncle Mike", driverId: "car-27" },
-    { id: "p-sara", name: "Sara", driverId: "car-26" },
-    { id: "p-ben", name: "Ben", driverId: "car-7" },
-    { id: "p-katie", name: "Katie", driverId: "car-15" },
-    { id: "p-tom", name: "Cousin Tom", driverId: "car-3" },
+    { id: "p-mike", name: "Mike", driverId: "car-06" },
+    { id: "p-kesley", name: "Kesley", driverId: "car-75" },
+    { id: "p-ryan", name: "Ryan", driverId: "car-9" },
+    { id: "p-adam", name: "Adam", driverId: "car-5" },
+    { id: "p-daisy", name: "Daisy", driverId: "car-20" },
+    { id: "p-courtney", name: "Courtney", driverId: "car-23" },
+    { id: "p-gigi", name: "Gigi", driverId: "car-33" },
+    { id: "p-jopa", name: "Jopa", driverId: "car-8" },
+    { id: "p-tod", name: "Tod", driverId: "car-10" },
+    { id: "p-rebecca", name: "Rebecca", driverId: "car-3" },
+    { id: "p-delia", name: "Delia", driverId: "car-14" },
+    { id: "p-sadie", name: "Sadie", driverId: "car-7" },
+    { id: "p-felicia", name: "Felicia", driverId: "car-60" },
+    { id: "p-joy", name: "Joy", driverId: "car-6" },
+    { id: "p-brett", name: "Brett", driverId: "car-12" },
+    { id: "p-silas", name: "Silas", driverId: "car-2" },
+    { id: "p-katie", name: "Katie", driverId: "car-31" }
   ],
 
   // SMALL FAMILY (5 managers) — each drafts a team of drivers. Points come

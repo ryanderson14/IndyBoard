@@ -22,13 +22,13 @@ export function DraftLeague({ rows }: { rows: DraftRow[] }) {
   const maxBar = Math.max(leaderTotal, 1);
 
   return (
-    <section aria-label="Draft League">
+    <section aria-label="Anderson Draft League">
       <div className="mb-2 flex items-end justify-between gap-2">
         <span
           className="hud-tag"
           style={{ background: "var(--accent-cyan)", color: "#001a22" }}
         >
-          Draft League
+          Anderson Draft League
         </span>
         <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute">
           {rows.length} teams
