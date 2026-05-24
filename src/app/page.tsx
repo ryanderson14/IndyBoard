@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useBoard } from "@/components/useBoard";
 import { RaceHeader } from "@/components/RaceHeader";
 import { Ticker } from "@/components/Ticker";
-import { TrackView } from "@/components/TrackView";
 import { FamilyStandings } from "@/components/FamilyStandings";
 import { DraftLeague } from "@/components/DraftLeague";
 
@@ -17,10 +16,12 @@ export default function Dashboard() {
 
   if (!data) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-3xl items-center justify-center p-6 text-white/50">
-        <div className="text-center">
-          <div className="checkered mx-auto mb-3 h-10 w-10 animate-spin rounded-md" />
-          Loading the grid…
+      <main className="relative z-10 mx-auto flex min-h-screen max-w-3xl items-center justify-center p-6 text-ink-dim">
+        <div className="flex flex-col items-center gap-3">
+          <div className="checkered h-12 w-12 animate-spin rounded-sm border border-white/20" />
+          <div className="font-display text-sm font-black uppercase tracking-[0.2em]">
+            Loading the grid…
+          </div>
         </div>
       </main>
     );
@@ -30,40 +31,73 @@ export default function Dashboard() {
   const finished = board.race.flagStatus === "checkered";
 
   return (
-    <main className="mx-auto max-w-3xl space-y-4 p-3 sm:p-6">
+    <main className="relative z-10 mx-auto max-w-3xl space-y-4 p-3 pb-10 sm:p-5 lg:max-w-4xl">
       <RaceHeader race={board.race} source={source} connected={connected} />
       <Ticker board={board} />
 
       {finished && board.race.leader && (
-        <div className="rounded-2xl border border-yellow-400/40 bg-yellow-400/10 p-4 text-center">
-          <div className="text-2xl">🏆</div>
-          <div className="font-black">
-            {board.race.leader.name} wins the {board.race.raceName}!
+        <div className="pit-panel relative overflow-hidden p-5 text-center">
+          <div className="checkered absolute inset-x-0 top-0 h-2" />
+          <div className="checkered absolute inset-x-0 bottom-0 h-2" />
+          <div className="font-display text-xs font-black uppercase tracking-[0.3em] text-[var(--accent-amber)]">
+            🏆 Checkered Flag
           </div>
-          <div className="text-sm text-white/60">
-            Draft champion: {board.draftLeague[0]?.team.name} · {board.draftLeague[0]?.total} pts
+          <div className="mt-1 font-display text-2xl font-black italic uppercase text-ink sm:text-3xl">
+            {board.race.leader.name} wins the {board.race.raceName}
           </div>
+          {board.draftLeague[0] && (
+            <div className="mt-1 text-xs uppercase tracking-wider text-ink-dim">
+              Draft champion ·{" "}
+              <span className="font-bold text-ink">
+                {board.draftLeague[0].team.name}
+              </span>{" "}
+              · {board.draftLeague[0].total} pts
+            </div>
+          )}
         </div>
       )}
 
-      <TrackView board={board} />
-
-      <div className="flex rounded-full border border-white/10 bg-white/5 p-1 text-sm font-bold">
+      {/* Tab switcher */}
+      <div
+        role="tablist"
+        aria-label="Leaderboards"
+        className="pit-panel flex p-1"
+      >
         <button
+          role="tab"
+          aria-selected={tab === "family"}
           onClick={() => setTab("family")}
-          className={`flex-1 rounded-full py-2 transition-colors ${
-            tab === "family" ? "bg-white text-black" : "text-white/60"
+          className={`relative flex-1 py-2 font-display text-sm font-black uppercase tracking-[0.18em] transition-colors ${
+            tab === "family"
+              ? "bg-[var(--accent-red)] text-white"
+              : "text-ink-dim hover:text-ink"
           }`}
+          style={{
+            clipPath:
+              tab === "family"
+                ? "polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%)"
+                : undefined,
+          }}
         >
-          Family Standings
+          Family
         </button>
         <button
+          role="tab"
+          aria-selected={tab === "draft"}
           onClick={() => setTab("draft")}
-          className={`flex-1 rounded-full py-2 transition-colors ${
-            tab === "draft" ? "bg-white text-black" : "text-white/60"
+          className={`relative flex-1 py-2 font-display text-sm font-black uppercase tracking-[0.18em] transition-colors ${
+            tab === "draft"
+              ? "bg-[var(--accent-cyan)] text-[#001a22]"
+              : "text-ink-dim hover:text-ink"
           }`}
+          style={{
+            clipPath:
+              tab === "draft"
+                ? "polygon(10px 0, 100% 0, 100% 100%, 0 100%)"
+                : undefined,
+          }}
         >
-          Draft League
+          Draft
         </button>
       </div>
 
@@ -73,13 +107,16 @@ export default function Dashboard() {
         <DraftLeague rows={board.draftLeague} />
       )}
 
-      <footer className="flex justify-center gap-4 pt-2 text-xs text-white/40">
-        <Link href="/tv" className="hover:text-white">
-          📺 TV mode
-        </Link>
-        <Link href="/admin" className="hover:text-white">
-          ⚙️ Admin
-        </Link>
+      <footer className="flex items-center justify-between border-t border-white/[0.06] pt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-ink-mute">
+        <span>IndyBoard</span>
+        <div className="flex gap-4">
+          <Link href="/tv" className="hover:text-ink">
+            📺 TV Mode
+          </Link>
+          <Link href="/admin" className="hover:text-ink">
+            ⚙ Race Control
+          </Link>
+        </div>
       </footer>
     </main>
   );

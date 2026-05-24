@@ -8,60 +8,108 @@ interface Props {
   connected: boolean;
 }
 
+const SOURCE_LABEL: Record<DataSource, string> = {
+  mock: "SIM",
+  sportradar: "SPORTRADAR",
+  manual: "MANUAL",
+};
+
 export function RaceHeader({ race, source, connected }: Props) {
   const flag = FLAG_META[race.flagStatus];
   const pct = race.totalLaps ? Math.min(100, (race.lap / race.totalLaps) * 100) : 0;
+  const toGo = Math.max(0, race.totalLaps - race.lap);
 
   return (
-    <header className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="checkered h-9 w-9 rounded-md" aria-hidden />
-          <div>
-            <h1 className="text-lg font-black tracking-tight sm:text-2xl">{race.raceName}</h1>
-            <p className="text-xs text-white/50">
-              {connected ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-green-400" />
-                  Live · {source}
-                </span>
-              ) : (
-                <span className="text-amber-400">reconnecting…</span>
-              )}
-            </p>
+    <header className="pit-panel relative overflow-hidden">
+      {/* Brand stripe */}
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--accent-red)] via-[var(--accent-amber)] to-[var(--accent-red)]" />
+
+      <div className="grid grid-cols-1 gap-3 px-4 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6 sm:px-6 sm:py-5">
+        {/* Title block */}
+        <div className="flex items-center gap-4 min-w-0">
+          <div
+            className="checkered h-12 w-12 shrink-0 rounded-[2px] border border-white/20"
+            aria-hidden
+          />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span
+                className={`hud-tag ${connected ? "" : "hud-tag-dark"}`}
+                aria-label={connected ? "Live" : "Reconnecting"}
+              >
+                {connected ? (
+                  <>
+                    <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                    LIVE
+                  </>
+                ) : (
+                  "OFFLINE"
+                )}
+              </span>
+              <span className="hud-tag hud-tag-dark">{SOURCE_LABEL[source]}</span>
+            </div>
+            <h1 className="font-display text-3xl font-black italic uppercase tracking-tight text-ink sm:text-4xl lg:text-5xl">
+              {race.raceName}
+            </h1>
+            {race.leader && (
+              <p className="mt-0.5 truncate text-xs text-ink-dim">
+                <span className="text-ink-mute">LEADER ·</span>{" "}
+                <span className="font-semibold text-ink">{race.leader.name}</span>{" "}
+                <span className="tabular text-ink-mute">#{race.leader.number}</span>{" "}
+                <span className="text-ink-mute">·</span> {race.leader.team}
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Right-rail: flag + lap counter */}
+        <div className="flex items-center justify-between gap-4 sm:justify-end">
           <span
-            className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
-            style={{ backgroundColor: flag.bg, color: flag.color }}
+            className={`inline-flex h-9 items-center rounded-[2px] px-3 text-[11px] font-black uppercase tracking-[0.2em] ${flag.cls}`}
+            style={{ color: flag.color }}
           >
             {flag.label}
           </span>
-          <div className="text-right">
-            <div className="font-mono text-xl font-black sm:text-2xl">
+
+          <div className="flex items-baseline gap-1 leading-none">
+            <span className="font-display text-[64px] font-black italic tabular text-ink sm:text-[80px]">
               {race.lap}
-              <span className="text-white/40">/{race.totalLaps}</span>
-            </div>
-            <div className="text-[10px] uppercase tracking-widest text-white/40">Laps</div>
+            </span>
+            <span className="font-display text-3xl font-black italic tabular text-ink-mute sm:text-4xl">
+              /{race.totalLaps}
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+      {/* Progress stripe — chunky broadcast bar */}
+      <div className="relative h-2 w-full bg-rail">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-green-400 via-yellow-300 to-red-500 transition-all duration-700"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-[var(--accent-green)] via-[var(--accent-amber)] to-[var(--accent-red)] transition-[width] duration-700"
           style={{ width: `${pct}%` }}
+        />
+        {/* Tick marks every 25% */}
+        {[25, 50, 75].map((p) => (
+          <div
+            key={p}
+            className="absolute top-0 h-full w-px bg-black/60"
+            style={{ left: `${p}%` }}
+          />
+        ))}
+        <div
+          className="absolute -top-1 h-4 w-[3px] bg-white shadow-[0_0_8px_rgba(255,255,255,0.7)]"
+          style={{ left: `calc(${pct}% - 1.5px)` }}
         />
       </div>
 
-      {race.leader && (
-        <p className="mt-2 text-xs text-white/60">
-          Leader: <span className="font-bold text-white">{race.leader.name}</span> · #
-          {race.leader.number} · {race.leader.team}
-        </p>
-      )}
+      <div className="flex items-center justify-between border-t border-white/[0.04] bg-black/30 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:px-6">
+        <span>
+          {Math.round(pct)}% complete
+        </span>
+        <span className="tabular">
+          {race.flagStatus === "checkered" ? "RACE OVER" : `${toGo} LAPS TO GO`}
+        </span>
+      </div>
     </header>
   );
 }

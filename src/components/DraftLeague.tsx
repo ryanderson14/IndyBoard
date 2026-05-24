@@ -4,95 +4,183 @@ import { useState } from "react";
 import type { DraftRow } from "@/lib/board";
 import { DriverAvatar } from "./DriverAvatar";
 import { useMovement } from "./useMovement";
-import { ordinal } from "./ui";
-
-const MEDAL = ["", "🥇", "🥈", "🥉"];
+import { ordinal, positionPill } from "./ui";
 
 export function DraftLeague({ rows }: { rows: DraftRow[] }) {
   const moves = useMovement(Object.fromEntries(rows.map((r) => [r.team.id, r.rank])));
   const [open, setOpen] = useState<string | null>(rows[0]?.team.id ?? null);
 
   if (!rows.length) {
-    return <p className="p-6 text-center text-white/50">No teams configured yet.</p>;
+    return (
+      <div className="pit-panel p-6 text-center text-sm text-ink-dim">
+        No teams configured yet.
+      </div>
+    );
   }
 
   const leaderTotal = rows[0]?.total ?? 0;
+  const maxBar = Math.max(leaderTotal, 1);
 
   return (
-    <ul className="space-y-2">
-      {rows.map((row) => {
-        const move = moves[row.team.id];
-        const expanded = open === row.team.id;
-        const gap = leaderTotal - row.total;
-        return (
-          <li
-            key={row.team.id}
-            className={`overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-colors ${
-              move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
-            } ${row.rank === 1 ? "ring-1 ring-yellow-400/40" : ""}`}
-          >
-            <button
-              onClick={() => setOpen(expanded ? null : row.team.id)}
-              className="flex w-full items-center gap-3 p-3 text-left"
-            >
-              <div className="w-8 text-center">
-                <div className="text-lg font-black tabular-nums">{row.rank}</div>
-                {MEDAL[row.rank] && <div className="-mt-1 text-xs">{MEDAL[row.rank]}</div>}
-              </div>
-              <DriverAvatar name={row.team.name} avatar={row.team.avatar} color="#e2c044" />
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-bold">{row.team.name}</div>
-                <div className="text-xs text-white/50">
-                  {row.drivers.length} cars{gap > 0 && ` · ${gap} pts back`}
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-mono text-xl font-black text-yellow-300">{row.total}</div>
-                <div className="text-[10px] uppercase tracking-widest text-white/40">pts</div>
-              </div>
-              <span className={`ml-1 text-white/40 transition-transform ${expanded ? "rotate-90" : ""}`}>
-                ›
-              </span>
-            </button>
+    <section aria-label="Draft League">
+      <div className="mb-2 flex items-end justify-between">
+        <span
+          className="hud-tag"
+          style={{ background: "var(--accent-cyan)", color: "#001a22" }}
+        >
+          Draft League
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute">
+          {rows.length} teams
+        </span>
+      </div>
 
-            {expanded && (
-              <div className="border-t border-white/10 bg-black/20 px-3 py-2">
-                {row.drivers.map((d) => (
-                  <div
-                    key={d.driver.id}
-                    className="flex items-center gap-2 py-1.5 text-sm"
-                  >
-                    <span
-                      className="inline-block h-3 w-3 shrink-0 rounded-full"
-                      style={{ backgroundColor: d.driver.color }}
+      <ul className="space-y-1">
+        {rows.map((row) => {
+          const move = moves[row.team.id];
+          const expanded = open === row.team.id;
+          const gap = leaderTotal - row.total;
+          const pill = positionPill(row.rank);
+          const barPct = Math.round((row.total / maxBar) * 100);
+          const isLeader = row.rank === 1;
+
+          return (
+            <li
+              key={row.team.id}
+              className={`pit-panel rail overflow-hidden ${
+                move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
+              }`}
+              style={
+                {
+                  "--rail-color": isLeader
+                    ? "var(--accent-amber)"
+                    : "var(--accent-cyan)",
+                } as React.CSSProperties
+              }
+            >
+              <button
+                onClick={() => setOpen(expanded ? null : row.team.id)}
+                className="grid w-full grid-cols-[44px_1fr_auto_24px] items-center gap-3 py-2 pl-4 pr-3 text-left sm:grid-cols-[52px_1fr_auto_28px] sm:py-2.5 sm:pl-5 sm:pr-4"
+                aria-expanded={expanded}
+              >
+                {/* Position pill */}
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-[3px] font-display text-2xl font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
+                  style={{ background: pill.bg, color: pill.ink }}
+                >
+                  {row.rank}
+                </div>
+
+                {/* Team name + bar */}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <DriverAvatar
+                      name={row.team.name}
+                      avatar={row.team.avatar}
+                      color={isLeader ? "var(--accent-amber)" : "var(--accent-cyan)"}
+                      size={36}
                     />
-                    <span className="w-9 shrink-0 font-mono text-white/50">
-                      #{d.driver.number}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate">
-                      {d.driver.name}
-                      {d.bonuses.map((b) => (
-                        <span
-                          key={b}
-                          className="ml-1 rounded bg-fuchsia-500/20 px-1 text-[10px] text-fuchsia-300"
-                        >
-                          {b}
-                        </span>
-                      ))}
-                    </span>
-                    <span className="w-12 shrink-0 text-right text-white/50">
-                      {d.driver.position >= 900 ? "—" : ordinal(d.driver.position)}
-                    </span>
-                    <span className="w-10 shrink-0 text-right font-mono font-bold">
-                      {d.points}
-                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate font-display text-lg font-extrabold uppercase tracking-tight text-ink sm:text-xl">
+                        {row.team.name}
+                      </div>
+                      <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute sm:text-xs">
+                        {row.drivers.length} cars
+                        {gap > 0 && (
+                          <>
+                            <span className="text-ink-mute"> · </span>
+                            <span className="text-[var(--accent-down)]">−{gap} pts</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+                  {/* Points bar */}
+                  <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-rail">
+                    <div
+                      className="h-full rounded-full transition-[width] duration-700"
+                      style={{
+                        width: `${barPct}%`,
+                        background: isLeader
+                          ? "linear-gradient(90deg, var(--accent-amber), #fff7c2)"
+                          : "linear-gradient(90deg, var(--accent-cyan), #7ee0ff)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Points big number */}
+                <div className="text-right leading-none">
+                  <div
+                    className="font-display text-3xl font-black italic tabular sm:text-4xl"
+                    style={{ color: isLeader ? "var(--accent-amber)" : "var(--ink)" }}
+                  >
+                    {row.total}
+                  </div>
+                  <div className="text-[9px] font-black uppercase tracking-[0.22em] text-ink-mute">
+                    PTS
+                  </div>
+                </div>
+
+                {/* Chevron */}
+                <span
+                  className={`flex h-6 w-6 items-center justify-center text-ink-mute transition-transform ${
+                    expanded ? "rotate-90" : ""
+                  }`}
+                  aria-hidden
+                >
+                  ›
+                </span>
+              </button>
+
+              {/* Expandable driver detail */}
+              {expanded && (
+                <div className="border-t border-white/[0.05] bg-black/30 px-3 py-2 sm:px-4">
+                  <div className="grid grid-cols-[14px_44px_1fr_56px_44px] items-center gap-2 pb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:grid-cols-[16px_48px_1fr_64px_52px]">
+                    <span />
+                    <span>NO</span>
+                    <span>DRIVER</span>
+                    <span className="text-right">POS</span>
+                    <span className="text-right">PTS</span>
+                  </div>
+                  {row.drivers.map((d) => (
+                    <div
+                      key={d.driver.id}
+                      className="grid grid-cols-[14px_44px_1fr_56px_44px] items-center gap-2 py-1.5 text-sm sm:grid-cols-[16px_48px_1fr_64px_52px]"
+                    >
+                      <span
+                        className="inline-block h-3.5 w-1 shrink-0"
+                        style={{ background: d.driver.color }}
+                        aria-hidden
+                      />
+                      <span className="font-mono text-xs font-bold text-ink-dim tabular">
+                        #{d.driver.number}
+                      </span>
+                      <span className="flex min-w-0 items-center gap-1.5 truncate font-semibold text-ink">
+                        <span className="truncate">{d.driver.name}</span>
+                        {d.bonuses.map((b) => (
+                          <span
+                            key={b}
+                            className="shrink-0 rounded-sm bg-[var(--accent-magenta)]/15 px-1 text-[9px] font-black uppercase tracking-wider text-[var(--accent-magenta)]"
+                          >
+                            {b}
+                          </span>
+                        ))}
+                      </span>
+                      <span className="text-right font-mono text-xs text-ink-dim tabular">
+                        {d.driver.position >= 900 ? "—" : ordinal(d.driver.position)}
+                      </span>
+                      <span className="text-right font-display text-base font-black italic tabular text-ink">
+                        {d.points}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
