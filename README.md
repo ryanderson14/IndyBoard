@@ -42,7 +42,12 @@ set `avatar: "/avatars/name.png"`, or leave it blank to auto-generate a cartoon.
 Set `DATA_SOURCE` (env or flip live from `/admin`):
 
 - `mock` — built-in simulated race (default).
-- `sportradar` — live official feed. Set `SPORTRADAR_API_KEY` and
+- `espn` — **free unofficial ESPN feed, no API key required**. Auto-detects
+  today's IndyCar race; set `ESPN_EVENT_ID` to pin a specific event. Pulls
+  live running order, lap counter, car numbers, teams, laps led, fastest
+  lap, gaps. ESPN doesn't expose caution/red flag state — use `/admin` to
+  flip flags manually.
+- `sportradar` — paid official feed. Set `SPORTRADAR_API_KEY` and
   `SPORTRADAR_EVENT_ID`. Confirm the endpoint/field mapping in
   `src/lib/datasource/sportradar.ts` against a real response on race day.
 - `manual` — you set the running order from `/admin` (the bulletproof fallback).

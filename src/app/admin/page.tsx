@@ -79,7 +79,13 @@ export default function AdminPage() {
 
   if (!authed) {
     return (
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-4 p-6">
+      <main
+        className="
+          relative z-10 mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-4
+          p-6
+          md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+        "
+      >
         <div className="text-center">
           <span className="hud-tag mx-auto">Race Control</span>
           <h1 className="mt-3 font-display text-4xl font-black italic uppercase">Admin</h1>
@@ -106,7 +112,13 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="relative z-10 mx-auto max-w-2xl space-y-5 p-5">
+    <main
+      className="
+        relative z-10 mx-auto max-w-2xl space-y-5
+        p-5 lg:p-8
+        md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+      "
+    >
       <header className="flex items-center justify-between border-b border-white/[0.06] pb-3">
         <div>
           <span className="hud-tag">Race Control</span>

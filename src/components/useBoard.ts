@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Board } from "@/lib/board";
-import type { DataSource } from "@/lib/types";
+import type { DataSource, DriverState } from "@/lib/types";
 
 export interface BoardResponse {
   source: DataSource;
   board: Board;
+  /** Full 33-driver field — used by the scoring pylon overlay. */
+  field: DriverState[];
 }
 
 const POLL_MS = 4000;

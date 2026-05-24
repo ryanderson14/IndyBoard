@@ -10,6 +10,7 @@ interface Props {
 
 const SOURCE_LABEL: Record<DataSource, string> = {
   mock: "SIM",
+  espn: "ESPN",
   sportradar: "SPORTRADAR",
   manual: "MANUAL",
 };

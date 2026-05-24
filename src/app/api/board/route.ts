@@ -9,7 +9,7 @@ export async function GET() {
     const { source, race } = await getRaceState();
     const board = buildBoard(race);
     return NextResponse.json(
-      { source, board },
+      { source, board, field: race.drivers },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (err) {
