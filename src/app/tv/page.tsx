@@ -11,7 +11,12 @@ export default function TvMode() {
 
   if (!data) {
     return (
-      <main className="relative z-10 flex min-h-screen items-center justify-center text-ink-dim">
+      <main
+        className="
+          relative z-10 flex min-h-screen items-center justify-center text-ink-dim
+          md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+        "
+      >
         <div className="flex flex-col items-center gap-4">
           <div className="checkered h-16 w-16 animate-spin rounded-sm border border-white/20" />
           <div className="font-display text-xl font-black uppercase tracking-[0.25em]">
@@ -25,7 +30,13 @@ export default function TvMode() {
   const { board, source } = data;
 
   return (
-    <main className="relative z-10 mx-auto max-w-[1800px] space-y-5 p-5 lg:p-8">
+    <main
+      className="
+        relative z-10 mx-auto max-w-[1800px] space-y-5
+        p-5 lg:p-8
+        md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+      "
+    >
       <RaceHeader race={board.race} source={source} connected={connected} />
       <Ticker board={board} />
 

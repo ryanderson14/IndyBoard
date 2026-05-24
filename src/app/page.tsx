@@ -16,7 +16,13 @@ export default function Dashboard() {
 
   if (!data) {
     return (
-      <main className="relative z-10 mx-auto flex min-h-screen max-w-3xl items-center justify-center p-6 text-ink-dim">
+      <main
+        className="
+          relative z-10 mx-auto flex min-h-screen max-w-3xl items-center justify-center text-ink-dim
+          p-6
+          md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+        "
+      >
         <div className="flex flex-col items-center gap-3">
           <div className="checkered h-12 w-12 animate-spin rounded-sm border border-white/20" />
           <div className="font-display text-sm font-black uppercase tracking-[0.2em]">
@@ -31,7 +37,13 @@ export default function Dashboard() {
   const finished = board.race.flagStatus === "checkered";
 
   return (
-    <main className="relative z-10 mx-auto max-w-3xl space-y-4 p-3 pb-10 sm:p-5 lg:max-w-4xl">
+    <main
+      className="
+        relative z-10 mx-auto max-w-3xl space-y-4 lg:max-w-4xl
+        p-3 pb-10 sm:p-5 lg:p-8
+        md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
+      "
+    >
       <RaceHeader race={board.race} source={source} connected={connected} />
       <Ticker board={board} />
 
