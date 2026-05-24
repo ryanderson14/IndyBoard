@@ -61,6 +61,9 @@ html,
 body {
   background: var(--bg-deep);
   color: var(--ink);
+  /* Defensive: prevents any rogue child from causing horizontal scroll on
+     narrow viewports. Layouts should still fit naturally; this is a guard. */
+  overflow-x: hidden;
 }
 
 body {

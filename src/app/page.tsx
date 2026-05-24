@@ -79,7 +79,7 @@ export default function Dashboard() {
           role="tab"
           aria-selected={tab === "family"}
           onClick={() => setTab("family")}
-          className={`relative flex-1 py-2 font-display text-sm font-black uppercase tracking-[0.18em] transition-colors ${
+          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-[0.18em] transition-colors sm:py-2 sm:text-sm ${
             tab === "family"
               ? "bg-[var(--accent-red)] text-white"
               : "text-ink-dim hover:text-ink"
@@ -87,7 +87,7 @@ export default function Dashboard() {
           style={{
             clipPath:
               tab === "family"
-                ? "polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%)"
+                ? "polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%)"
                 : undefined,
           }}
         >
@@ -97,7 +97,7 @@ export default function Dashboard() {
           role="tab"
           aria-selected={tab === "draft"}
           onClick={() => setTab("draft")}
-          className={`relative flex-1 py-2 font-display text-sm font-black uppercase tracking-[0.18em] transition-colors ${
+          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-[0.18em] transition-colors sm:py-2 sm:text-sm ${
             tab === "draft"
               ? "bg-[var(--accent-cyan)] text-[#001a22]"
               : "text-ink-dim hover:text-ink"
@@ -105,7 +105,7 @@ export default function Dashboard() {
           style={{
             clipPath:
               tab === "draft"
-                ? "polygon(10px 0, 100% 0, 100% 100%, 0 100%)"
+                ? "polygon(8px 0, 100% 0, 100% 100%, 0 100%)"
                 : undefined,
           }}
         >
@@ -119,9 +119,9 @@ export default function Dashboard() {
         <DraftLeague rows={board.draftLeague} />
       )}
 
-      <footer className="flex items-center justify-between border-t border-white/[0.06] pt-3 text-[10px] font-bold uppercase tracking-[0.22em] text-ink-mute">
+      <footer className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/[0.06] pt-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:tracking-[0.22em]">
         <span>IndyBoard</span>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
           <Link href="/tv" className="hover:text-ink">
             📺 TV Mode
           </Link>

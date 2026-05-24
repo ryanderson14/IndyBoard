@@ -25,15 +25,15 @@ export function RaceHeader({ race, source, connected }: Props) {
       {/* Brand stripe */}
       <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--accent-red)] via-[var(--accent-amber)] to-[var(--accent-red)]" />
 
-      <div className="grid grid-cols-1 gap-3 px-4 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6 sm:px-6 sm:py-5">
+      <div className="grid grid-cols-1 gap-3 px-3 py-3 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-6 sm:px-6 sm:py-5">
         {/* Title block */}
-        <div className="flex items-center gap-4 min-w-0">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           <div
-            className="checkered h-12 w-12 shrink-0 rounded-[2px] border border-white/20"
+            className="checkered h-10 w-10 shrink-0 rounded-[2px] border border-white/20 sm:h-12 sm:w-12"
             aria-hidden
           />
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span
                 className={`hud-tag ${connected ? "" : "hud-tag-dark"}`}
                 aria-label={connected ? "Live" : "Reconnecting"}
@@ -49,34 +49,33 @@ export function RaceHeader({ race, source, connected }: Props) {
               </span>
               <span className="hud-tag hud-tag-dark">{SOURCE_LABEL[source]}</span>
             </div>
-            <h1 className="font-display text-3xl font-black italic uppercase tracking-tight text-ink sm:text-4xl lg:text-5xl">
+            <h1 className="font-display text-2xl font-black italic uppercase leading-[0.95] tracking-tight text-ink sm:text-4xl lg:text-5xl">
               {race.raceName}
             </h1>
             {race.leader && (
-              <p className="mt-0.5 truncate text-xs text-ink-dim">
+              <p className="mt-1 truncate text-[11px] text-ink-dim sm:text-xs">
                 <span className="text-ink-mute">LEADER ·</span>{" "}
                 <span className="font-semibold text-ink">{race.leader.name}</span>{" "}
-                <span className="tabular text-ink-mute">#{race.leader.number}</span>{" "}
-                <span className="text-ink-mute">·</span> {race.leader.team}
+                <span className="tabular text-ink-mute">#{race.leader.number}</span>
               </p>
             )}
           </div>
         </div>
 
         {/* Right-rail: flag + lap counter */}
-        <div className="flex items-center justify-between gap-4 sm:justify-end">
+        <div className="flex min-w-0 items-center justify-between gap-3 sm:justify-end sm:gap-4">
           <span
-            className={`inline-flex h-9 items-center rounded-[2px] px-3 text-[11px] font-black uppercase tracking-[0.2em] ${flag.cls}`}
+            className={`inline-flex h-8 shrink-0 items-center rounded-[2px] px-2.5 text-[10px] font-black uppercase tracking-[0.18em] sm:h-9 sm:px-3 sm:text-[11px] sm:tracking-[0.2em] ${flag.cls}`}
             style={{ color: flag.color }}
           >
             {flag.label}
           </span>
 
-          <div className="flex items-baseline gap-1 leading-none">
-            <span className="font-display text-[64px] font-black italic tabular text-ink sm:text-[80px]">
+          <div className="flex shrink-0 items-baseline gap-0.5 leading-none sm:gap-1">
+            <span className="font-display text-[44px] font-black italic tabular text-ink sm:text-[64px] lg:text-[80px]">
               {race.lap}
             </span>
-            <span className="font-display text-3xl font-black italic tabular text-ink-mute sm:text-4xl">
+            <span className="font-display text-xl font-black italic tabular text-ink-mute sm:text-3xl lg:text-4xl">
               /{race.totalLaps}
             </span>
           </div>
@@ -103,10 +102,8 @@ export function RaceHeader({ race, source, connected }: Props) {
         />
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/[0.04] bg-black/30 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:px-6">
-        <span>
-          {Math.round(pct)}% complete
-        </span>
+      <div className="flex items-center justify-between border-t border-white/[0.04] bg-black/30 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-ink-mute sm:px-6 sm:tracking-[0.18em]">
+        <span>{Math.round(pct)}%</span>
         <span className="tabular">
           {race.flagStatus === "checkered" ? "RACE OVER" : `${toGo} LAPS TO GO`}
         </span>

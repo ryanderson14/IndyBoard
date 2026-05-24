@@ -19,15 +19,15 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
   return (
     <section aria-label="Family Standings">
       {/* Section header */}
-      <div className="mb-2 flex items-end justify-between">
+      <div className="mb-2 flex items-end justify-between gap-2">
         <span className="hud-tag">Family Standings</span>
         <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute">
-          {rows.length} drivers in play
+          {rows.length} drivers
         </span>
       </div>
 
-      {/* Column header row — broadcast timing & scoring style */}
-      <div className="mb-1 grid grid-cols-[44px_1fr_72px] items-center gap-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:grid-cols-[52px_1fr_92px]">
+      {/* Column header row */}
+      <div className="mb-1 grid grid-cols-[36px_1fr_56px] items-center gap-2 px-3 text-[9px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:grid-cols-[52px_1fr_92px] sm:gap-3 sm:text-[10px]">
         <div>POS</div>
         <div>Family · Driver</div>
         <div className="text-right">Running</div>
@@ -46,7 +46,7 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
           return (
             <li
               key={row.player.id}
-              className={`pit-panel rail relative grid grid-cols-[44px_1fr_72px] items-center gap-3 py-2 pl-4 pr-3 sm:grid-cols-[52px_1fr_92px] sm:py-2.5 sm:pl-5 sm:pr-4 ${
+              className={`pit-panel rail relative grid grid-cols-[36px_1fr_56px] items-center gap-2 py-2 pl-3 pr-2 sm:grid-cols-[52px_1fr_92px] sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-4 ${
                 move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
               }`}
               style={
@@ -58,7 +58,7 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
             >
               {/* Position pill */}
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-[3px] font-display text-2xl font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
+                className="flex h-8 w-8 items-center justify-center rounded-[3px] font-display text-lg font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
                 style={{ background: pill.bg, color: pill.ink }}
                 aria-label={`Position ${row.rank}`}
               >
@@ -66,21 +66,21 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
               </div>
 
               {/* Family + driver */}
-              <div className="flex min-w-0 items-center gap-3">
+              <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
                 <DriverAvatar
                   name={row.player.name}
                   avatar={row.player.avatar}
                   number={row.driver.number}
                   color={row.driver.color}
-                  size={44}
+                  size={40}
                 />
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <span className="truncate font-display text-lg font-extrabold uppercase tracking-tight text-ink sm:text-xl">
+                    <span className="truncate font-display text-base font-extrabold uppercase tracking-tight text-ink sm:text-xl">
                       {row.player.name}
                     </span>
                     {isPodium && !isLeader && (
-                      <span className="rounded-sm bg-white/10 px-1 text-[9px] font-bold uppercase tracking-wider text-ink-dim">
+                      <span className="hidden rounded-sm bg-white/10 px-1 text-[9px] font-bold uppercase tracking-wider text-ink-dim sm:inline-block">
                         Podium
                       </span>
                     )}
@@ -88,7 +88,6 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
                   <div className="truncate text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-xs">
                     <span className="tabular text-ink-mute">#{row.driver.number}</span>{" "}
                     <span className="text-ink">{row.driver.name}</span>
-                    <span className="text-ink-mute"> · {row.driver.team}</span>
                     {row.driver.fastestLap && (
                       <span className="ml-1.5 inline-flex items-center rounded-sm bg-[var(--accent-magenta)]/15 px-1 text-[10px] font-black uppercase tracking-wider text-[var(--accent-magenta)]">
                         ⚡ FL
@@ -110,11 +109,11 @@ export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
 
               {/* Running position + delta */}
               <div className="text-right">
-                <div className="font-display text-xl font-black italic tabular text-ink sm:text-2xl">
+                <div className="font-display text-base font-black italic tabular text-ink sm:text-2xl">
                   {row.driver.position >= 900 ? "—" : ordinal(row.driver.position)}
                 </div>
                 <div
-                  className={`mt-0.5 text-[11px] font-black uppercase tracking-wider tabular ${delta.cls}`}
+                  className={`mt-0.5 text-[10px] font-black uppercase tracking-wider tabular sm:text-[11px] ${delta.cls}`}
                   title="Spots gained vs grid"
                 >
                   {delta.text}
