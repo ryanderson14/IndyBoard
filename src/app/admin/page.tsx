@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import type { DataSource, FlagStatus, RaceState } from "@/lib/types";
 
 const FLAGS: FlagStatus[] = ["pre", "green", "yellow", "red", "checkered"];
-const SOURCES: DataSource[] = ["mock", "sportradar", "manual"];
+const SOURCES: DataSource[] = ["mock", "espn", "sportradar", "manual"];
 
 export default function AdminPage() {
   const [secret, setSecret] = useState("");
