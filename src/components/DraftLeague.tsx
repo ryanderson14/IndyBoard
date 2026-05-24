@@ -23,14 +23,14 @@ export function DraftLeague({ rows }: { rows: DraftRow[] }) {
 
   return (
     <section aria-label="Anderson Draft League">
-      <div className="mb-2 flex items-end justify-between gap-2">
+      <div className="mb-2 flex flex-wrap items-end justify-between gap-x-2 gap-y-1">
         <span
           className="hud-tag"
           style={{ background: "var(--accent-cyan)", color: "#001a22" }}
         >
           Anderson Draft League
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute">
+        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink-mute sm:tracking-[0.18em]">
           {rows.length} teams
         </span>
       </div>
@@ -60,12 +60,12 @@ export function DraftLeague({ rows }: { rows: DraftRow[] }) {
             >
               <button
                 onClick={() => setOpen(expanded ? null : row.team.id)}
-                className="grid w-full grid-cols-[36px_1fr_auto_20px] items-center gap-2 py-2 pl-3 pr-2 text-left sm:grid-cols-[52px_1fr_auto_28px] sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-4"
+                className="grid w-full grid-cols-[30px_minmax(0,1fr)_auto_16px] items-center gap-1.5 py-2 pl-2 pr-1.5 text-left sm:grid-cols-[52px_1fr_auto_28px] sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-4"
                 aria-expanded={expanded}
               >
                 {/* Position pill */}
                 <div
-                  className="flex h-8 w-8 items-center justify-center rounded-[3px] font-display text-lg font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
+                  className="flex h-7 w-7 items-center justify-center rounded-[3px] font-display text-base font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
                   style={{ background: pill.bg, color: pill.ink }}
                 >
                   {row.rank}
@@ -110,14 +110,14 @@ export function DraftLeague({ rows }: { rows: DraftRow[] }) {
                 </div>
 
                 {/* Points big number */}
-                <div className="text-right leading-none">
+                <div className="shrink-0 text-right leading-none">
                   <div
-                    className="font-display text-2xl font-black italic tabular sm:text-3xl lg:text-4xl"
+                    className="font-display text-xl font-black italic tabular sm:text-3xl lg:text-4xl"
                     style={{ color: isLeader ? "var(--accent-amber)" : "var(--ink)" }}
                   >
                     {row.total}
                   </div>
-                  <div className="text-[9px] font-black uppercase tracking-[0.22em] text-ink-mute">
+                  <div className="text-[9px] font-black uppercase tracking-[0.14em] text-ink-mute sm:tracking-[0.22em]">
                     PTS
                   </div>
                 </div>

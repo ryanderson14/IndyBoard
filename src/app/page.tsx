@@ -39,8 +39,8 @@ export default function Dashboard() {
   return (
     <main
       className="
-        relative z-10 mx-auto max-w-3xl space-y-4 lg:max-w-4xl
-        p-3 pb-10 sm:p-5 lg:p-8
+        relative z-10 mx-auto w-full max-w-3xl space-y-4 lg:max-w-4xl
+        p-2.5 pb-10 sm:p-5 lg:p-8
         md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
       "
     >
@@ -79,7 +79,7 @@ export default function Dashboard() {
           role="tab"
           aria-selected={tab === "family"}
           onClick={() => setTab("family")}
-          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-[0.18em] transition-colors sm:py-2 sm:text-sm ${
+          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-wider transition-colors sm:py-2 sm:text-sm sm:tracking-[0.18em] ${
             tab === "family"
               ? "bg-[var(--accent-red)] text-white"
               : "text-ink-dim hover:text-ink"
@@ -97,7 +97,7 @@ export default function Dashboard() {
           role="tab"
           aria-selected={tab === "draft"}
           onClick={() => setTab("draft")}
-          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-[0.18em] transition-colors sm:py-2 sm:text-sm ${
+          className={`relative flex-1 py-2.5 font-display text-xs font-black uppercase tracking-wider transition-colors sm:py-2 sm:text-sm sm:tracking-[0.18em] ${
             tab === "draft"
               ? "bg-[var(--accent-cyan)] text-[#001a22]"
               : "text-ink-dim hover:text-ink"

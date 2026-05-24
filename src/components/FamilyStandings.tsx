@@ -69,7 +69,7 @@ export function FamilyStandings({
     return (
       <li
         key={row.player.id}
-        className={`pit-panel rail relative grid grid-cols-[36px_1fr_56px] items-center gap-2 py-2 pl-3 pr-2 sm:grid-cols-[52px_1fr_92px] sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-4 ${
+        className={`pit-panel rail relative grid grid-cols-[30px_minmax(0,1fr)_56px] items-center gap-1.5 py-2 pl-2 pr-1.5 sm:grid-cols-[52px_1fr_92px] sm:gap-3 sm:py-2.5 sm:pl-5 sm:pr-4 ${
           move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
         }`}
         style={
@@ -81,7 +81,7 @@ export function FamilyStandings({
       >
         {/* Position pill */}
         <div
-          className="flex h-8 w-8 items-center justify-center rounded-[3px] font-display text-lg font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
+          className="flex h-7 w-7 items-center justify-center rounded-[3px] font-display text-base font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
           style={{ background: pill.bg, color: pill.ink }}
           aria-label={`Position ${row.rank}`}
         >
@@ -89,7 +89,7 @@ export function FamilyStandings({
         </div>
 
         {/* Family + driver */}
-        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <DriverAvatar
             name={row.player.name}
             avatar={row.player.avatar}

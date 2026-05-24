@@ -146,6 +146,14 @@ body::before {
   font-size: 0.7rem;
   text-transform: uppercase;
   clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  max-width: 100%;
+}
+@media (max-width: 639px) {
+  .hud-tag {
+    letter-spacing: 0.08em;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.7rem 0.2rem 0.5rem;
+  }
 }
 .hud-tag-dark {
   background: var(--bg-rail);
