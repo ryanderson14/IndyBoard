@@ -230,8 +230,14 @@ body::before {
 }
 .bob { animation: idle-bob 2.4s ease-in-out infinite; }
 
+@keyframes ticker-page {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.ticker-page { animation: ticker-page 480ms ease-out; }
+
 /* Reduce motion preference */
 @media (prefers-reduced-motion: reduce) {
   .marquee, .pulse-dot, .fl-glow, .red-strobe, .bob,
-  .flash-up, .flash-down { animation: none !important; }
+  .flash-up, .flash-down, .ticker-page { animation: none !important; }
 }

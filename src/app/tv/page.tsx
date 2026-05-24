@@ -42,7 +42,7 @@ export default function TvMode() {
 
       {/* TV layout: two equal columns; on smaller TVs/laptops stack vertically. */}
       <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-        <FamilyStandings rows={board.familyStandings} />
+        <FamilyStandings rows={board.familyStandings} cycleTail />
         <DraftLeague rows={board.draftLeague} />
       </div>
     </main>
