@@ -37,4 +37,4 @@ export interface RaceState {
 }
 
 /** Where the live data is coming from right now. */
-export type DataSource = "mock" | "sportradar" | "manual";
+export type DataSource = "mock" | "espn" | "sportradar" | "manual";
