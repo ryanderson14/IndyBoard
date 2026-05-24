@@ -1,6 +1,7 @@
 import type { DataSource, RaceState } from "../types";
 import { kvGet } from "../store";
 import { mockProvider } from "./mock";
+import { espnProvider } from "./espn";
 import { sportradarProvider } from "./sportradar";
 import { manualProvider } from "./manual";
 import type { RaceProvider } from "./provider";
@@ -9,6 +10,7 @@ export const DATA_SOURCE_KEY = "config:dataSource";
 
 const providers: Record<DataSource, RaceProvider> = {
   mock: mockProvider,
+  espn: espnProvider,
   sportradar: sportradarProvider,
   manual: manualProvider,
 };
