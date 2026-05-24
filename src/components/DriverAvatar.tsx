@@ -8,10 +8,9 @@ interface Props {
   size?: number;
 }
 
-// A person shown "as the driver": cartoon avatar inside a helmet-style ring
-// tinted with the car color, with the car number on a roundel. Uses an
-// uploaded image when provided, otherwise an auto-generated cartoon from
-// DiceBear so the board looks complete even before anyone uploads a photo.
+/* Helmet-style avatar: cartoon (DiceBear by default) inside a colored frame
+   with a sharp-cornered number plate. Auto-generates when no image is set so
+   the board renders complete before race day. */
 export function DriverAvatar({ name, avatar, number, color = "#888", size = 56 }: Props) {
   const src =
     avatar ??
@@ -20,8 +19,10 @@ export function DriverAvatar({ name, avatar, number, color = "#888", size = 56 }
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <div
-        className="h-full w-full overflow-hidden rounded-full bg-white/10"
-        style={{ border: `3px solid ${color}`, boxShadow: `0 0 12px ${color}55` }}
+        className="relative h-full w-full overflow-hidden rounded-[3px] bg-rail"
+        style={{
+          boxShadow: `inset 0 0 0 2px ${color}, 0 0 12px ${color}55`,
+        }}
       >
         <Image
           src={src}
@@ -31,11 +32,17 @@ export function DriverAvatar({ name, avatar, number, color = "#888", size = 56 }
           className="h-full w-full object-cover"
           unoptimized
         />
+        {/* Color bar at bottom */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-1.5"
+          style={{ background: color }}
+          aria-hidden
+        />
       </div>
       {number && (
         <span
-          className="absolute -bottom-1 -right-1 rounded-full px-1.5 text-[10px] font-black leading-4 text-black shadow"
-          style={{ backgroundColor: color }}
+          className="absolute -bottom-1 -right-1 rounded-[2px] px-1.5 py-px font-mono text-[10px] font-black leading-tight text-black shadow"
+          style={{ background: color }}
         >
           {number}
         </span>

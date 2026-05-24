@@ -1,34 +1,156 @@
 @import "tailwindcss";
 
+/* ============================================================
+   BROADCAST PIT WALL — IndyBoard design system
+   Tokens, typography, broadcast-graphic accents and animations.
+   ============================================================ */
+
 :root {
-  --background: #0a0a12;
-  --foreground: #f5f5f7;
-  --grid: #16161f;
+  /* Surfaces */
+  --bg-deep:   #07080c;
+  --bg-panel:  #0e1018;
+  --bg-rail:   #14171f;
+  --bg-overlay:#1a1d27;
+
+  /* Ink */
+  --ink:       #eef0f6;
+  --ink-dim:   #9a9eaf;
+  --ink-mute:  #565a6a;
+
+  /* Brand & signals */
+  --accent-red:     #d50032; /* IndyCar red — primary brand */
+  --accent-red-hot: #ff2d5a;
+  --accent-amber:   #ffbf00; /* signal amber — caution / leader gold */
+  --accent-green:   #00d97e; /* pit green — gained position */
+  --accent-down:    #ff4d4d; /* lost position */
+  --accent-magenta: #ff2bd6; /* fastest lap (broadcast purple/magenta) */
+  --accent-cyan:    #19c8ff; /* secondary info */
+
+  /* Backwards-compat tokens still referenced by tailwind */
+  --background: var(--bg-deep);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-track: #16161f;
+
+  --color-deep:    var(--bg-deep);
+  --color-panel:   var(--bg-panel);
+  --color-rail:    var(--bg-rail);
+  --color-overlay: var(--bg-overlay);
+
+  --color-ink:      var(--ink);
+  --color-ink-dim:  var(--ink-dim);
+  --color-ink-mute: var(--ink-mute);
+
+  --color-indy:    var(--accent-red);
+  --color-indyhot: var(--accent-red-hot);
+  --color-amber-sig: var(--accent-amber);
+  --color-green-sig: var(--accent-green);
+  --color-down:    var(--accent-down);
+  --color-fl:      var(--accent-magenta);
+  --color-cyan-sig: var(--accent-cyan);
+
+  --font-sans:    var(--font-geist-sans);
+  --font-mono:    var(--font-geist-mono);
+  --font-display: var(--font-barlow), var(--font-geist-sans), system-ui, sans-serif;
 }
 
 html,
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-deep);
+  color: var(--ink);
 }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* Stadium-lighting glow: a hot red spot top-right, a cool blue spot top-left,
+     and a faint vignette so the eye lands on the standings. */
   background-image:
-    radial-gradient(900px 500px at 80% -10%, rgba(213, 0, 50, 0.12), transparent),
-    radial-gradient(700px 400px at 0% 0%, rgba(31, 111, 235, 0.1), transparent);
+    radial-gradient(1100px 600px at 88% -12%, rgba(213, 0, 50, 0.22), transparent 60%),
+    radial-gradient(800px  500px at 0% -10%, rgba(25, 200, 255, 0.10), transparent 60%),
+    radial-gradient(1400px 900px at 50% 120%, rgba(0, 0, 0, 0.55), transparent 60%);
   background-attachment: fixed;
+  background-color: var(--bg-deep);
 }
 
-/* Checkered flag strip */
+/* Subtle CRT scanlines for the broadcast-monitor feel — barely visible,
+   adds depth without hurting legibility. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.018) 0px,
+    rgba(255, 255, 255, 0.018) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Display type — italic condensed for big numerals and titles. */
+.font-display {
+  font-family: var(--font-barlow), var(--font-geist-sans), system-ui, sans-serif;
+  font-stretch: condensed;
+  letter-spacing: -0.01em;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ===================== Pit-wall surface ===================== */
+
+.pit-panel {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0) 40%),
+    var(--bg-panel);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Hard-angled left accent rail (driver color or brand red) */
+.rail {
+  position: relative;
+  isolation: isolate;
+}
+.rail::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--rail-color, var(--accent-red));
+  box-shadow: 0 0 12px var(--rail-color, var(--accent-red));
+  z-index: 1;
+}
+
+/* Diagonal-cut top tag for section headings */
+.hud-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.85rem 0.2rem 0.6rem;
+  background: var(--accent-red);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.hud-tag-dark {
+  background: var(--bg-rail);
+  color: var(--ink-dim);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Checkered flag strip — kept for race-finished moments */
 .checkered {
   background-image:
     linear-gradient(45deg, #fff 25%, transparent 25%),
@@ -40,33 +162,73 @@ body {
   background-color: #111;
 }
 
-/* Scrolling ticker */
+/* Hatched warning fill — used for caution flag chip */
+.hatch-amber {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--accent-amber) 0 8px,
+    #1a1300 8px 16px
+  );
+  color: #1a1300;
+}
+.hatch-red {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--accent-red) 0 8px,
+    #1a000a 8px 16px
+  );
+  color: #fff;
+}
+
+/* ===================== Animations ===================== */
+
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 .marquee {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 30s linear infinite;
+  animation: marquee 38s linear infinite;
 }
 
-/* Live pulse dot */
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
+  50%      { opacity: 0.35; transform: scale(0.65); }
 }
 .pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
 
-/* Position-change flash */
-@keyframes flash-up { from { background-color: rgba(57, 211, 83, 0.35); } to { background-color: transparent; } }
-@keyframes flash-down { from { background-color: rgba(248, 81, 73, 0.35); } to { background-color: transparent; } }
-.flash-up { animation: flash-up 1.2s ease-out; }
-.flash-down { animation: flash-down 1.2s ease-out; }
+@keyframes flash-up {
+  0%   { background-color: rgba(0, 217, 126, 0.32); box-shadow: inset 4px 0 0 var(--accent-green); }
+  100% { background-color: transparent; box-shadow: inset 4px 0 0 transparent; }
+}
+@keyframes flash-down {
+  0%   { background-color: rgba(255, 77, 77, 0.30); box-shadow: inset 4px 0 0 var(--accent-down); }
+  100% { background-color: transparent; box-shadow: inset 4px 0 0 transparent; }
+}
+.flash-up   { animation: flash-up   1.3s ease-out; }
+.flash-down { animation: flash-down 1.3s ease-out; }
 
-/* Car drift around the oval */
+@keyframes fastest-lap-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 43, 214, 0.55); }
+  50%      { box-shadow: 0 0 18px 2px rgba(255, 43, 214, 0.75); }
+}
+.fl-glow { animation: fastest-lap-glow 1.8s ease-in-out infinite; }
+
+@keyframes red-strobe {
+  0%, 100% { background-color: var(--accent-red); }
+  50%      { background-color: #7a001c; }
+}
+.red-strobe { animation: red-strobe 1s ease-in-out infinite; }
+
 @keyframes idle-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+  50%      { transform: translateY(-2px); }
 }
 .bob { animation: idle-bob 2.4s ease-in-out infinite; }
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .marquee, .pulse-dot, .fl-glow, .red-strobe, .bob,
+  .flash-up, .flash-down { animation: none !important; }
+}

@@ -3,60 +3,135 @@
 import type { FamilyRow } from "@/lib/board";
 import { DriverAvatar } from "./DriverAvatar";
 import { useMovement } from "./useMovement";
-import { deltaLabel, ordinal } from "./ui";
-
-const MEDAL = ["", "🥇", "🥈", "🥉"];
+import { deltaLabel, ordinal, positionPill } from "./ui";
 
 export function FamilyStandings({ rows }: { rows: FamilyRow[] }) {
   const moves = useMovement(Object.fromEntries(rows.map((r) => [r.player.id, r.rank])));
 
   if (!rows.length) {
-    return <p className="p-6 text-center text-white/50">No players configured yet.</p>;
+    return (
+      <div className="pit-panel p-6 text-center text-sm text-ink-dim">
+        No players configured yet.
+      </div>
+    );
   }
 
   return (
-    <ul className="space-y-2">
-      {rows.map((row) => {
-        const move = moves[row.player.id];
-        const delta = deltaLabel(row.positionDelta);
-        return (
-          <li
-            key={row.player.id}
-            className={`flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-colors ${
-              move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
-            } ${row.rank <= 3 ? "ring-1 ring-yellow-400/30" : ""}`}
-          >
-            <div className="w-8 text-center">
-              <div className="text-lg font-black tabular-nums">{row.rank}</div>
-              {MEDAL[row.rank] && <div className="-mt-1 text-xs">{MEDAL[row.rank]}</div>}
-            </div>
+    <section aria-label="Family Standings">
+      {/* Section header */}
+      <div className="mb-2 flex items-end justify-between">
+        <span className="hud-tag">Family Standings</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute">
+          {rows.length} drivers in play
+        </span>
+      </div>
 
-            <DriverAvatar
-              name={row.player.name}
-              avatar={row.player.avatar}
-              number={row.driver.number}
-              color={row.driver.color}
-            />
+      {/* Column header row — broadcast timing & scoring style */}
+      <div className="mb-1 grid grid-cols-[44px_1fr_72px] items-center gap-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-mute sm:grid-cols-[52px_1fr_92px]">
+        <div>POS</div>
+        <div>Family · Driver</div>
+        <div className="text-right">Running</div>
+      </div>
 
-            <div className="min-w-0 flex-1">
-              <div className="truncate font-bold">{row.player.name}</div>
-              <div className="truncate text-xs text-white/50">
-                {row.driver.name} · {row.driver.team}
-                {row.driver.fastestLap && <span className="ml-1 text-fuchsia-400">⚡FL</span>}
-                {row.driver.status === "out" && <span className="ml-1 text-red-400">OUT</span>}
-                {row.driver.status === "pit" && <span className="ml-1 text-amber-300">PIT</span>}
+      <ul className="space-y-1">
+        {rows.map((row) => {
+          const move = moves[row.player.id];
+          const delta = deltaLabel(row.positionDelta);
+          const pill = positionPill(row.rank);
+          const isLeader = row.rank === 1;
+          const isPodium = row.rank <= 3;
+          const out = row.driver.status === "out";
+          const inPit = row.driver.status === "pit";
+
+          return (
+            <li
+              key={row.player.id}
+              className={`pit-panel rail relative grid grid-cols-[44px_1fr_72px] items-center gap-3 py-2 pl-4 pr-3 sm:grid-cols-[52px_1fr_92px] sm:py-2.5 sm:pl-5 sm:pr-4 ${
+                move === "up" ? "flash-up" : move === "down" ? "flash-down" : ""
+              }`}
+              style={
+                {
+                  "--rail-color": row.driver.color,
+                  borderColor: isLeader ? "rgba(255,191,0,0.4)" : undefined,
+                } as React.CSSProperties
+              }
+            >
+              {/* Position pill */}
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-[3px] font-display text-2xl font-black italic tabular sm:h-12 sm:w-12 sm:text-3xl"
+                style={{ background: pill.bg, color: pill.ink }}
+                aria-label={`Position ${row.rank}`}
+              >
+                {row.rank}
               </div>
-            </div>
 
-            <div className="text-right">
-              <div className="font-mono text-sm font-bold">
-                {row.driver.position >= 900 ? "—" : ordinal(row.driver.position)}
+              {/* Family + driver */}
+              <div className="flex min-w-0 items-center gap-3">
+                <DriverAvatar
+                  name={row.player.name}
+                  avatar={row.player.avatar}
+                  number={row.driver.number}
+                  color={row.driver.color}
+                  size={44}
+                />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="truncate font-display text-lg font-extrabold uppercase tracking-tight text-ink sm:text-xl">
+                      {row.player.name}
+                    </span>
+                    {isPodium && !isLeader && (
+                      <span className="rounded-sm bg-white/10 px-1 text-[9px] font-bold uppercase tracking-wider text-ink-dim">
+                        Podium
+                      </span>
+                    )}
+                  </div>
+                  <div className="truncate text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-xs">
+                    <span className="tabular text-ink-mute">#{row.driver.number}</span>{" "}
+                    <span className="text-ink">{row.driver.name}</span>
+                    <span className="text-ink-mute"> · {row.driver.team}</span>
+                    {row.driver.fastestLap && (
+                      <span className="ml-1.5 inline-flex items-center rounded-sm bg-[var(--accent-magenta)]/15 px-1 text-[10px] font-black uppercase tracking-wider text-[var(--accent-magenta)]">
+                        ⚡ FL
+                      </span>
+                    )}
+                    {out && (
+                      <span className="ml-1.5 inline-flex items-center rounded-sm bg-[var(--accent-down)]/15 px-1 text-[10px] font-black uppercase tracking-wider text-[var(--accent-down)]">
+                        OUT
+                      </span>
+                    )}
+                    {inPit && (
+                      <span className="ml-1.5 inline-flex items-center rounded-sm bg-[var(--accent-amber)]/15 px-1 text-[10px] font-black uppercase tracking-wider text-[var(--accent-amber)]">
+                        PIT
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className={`text-xs font-semibold ${delta.cls}`}>{delta.text}</div>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+
+              {/* Running position + delta */}
+              <div className="text-right">
+                <div className="font-display text-xl font-black italic tabular text-ink sm:text-2xl">
+                  {row.driver.position >= 900 ? "—" : ordinal(row.driver.position)}
+                </div>
+                <div
+                  className={`mt-0.5 text-[11px] font-black uppercase tracking-wider tabular ${delta.cls}`}
+                  title="Spots gained vs grid"
+                >
+                  {delta.text}
+                </div>
+              </div>
+
+              {/* Leader gold edge */}
+              {isLeader && (
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[4px] ring-1 ring-[var(--accent-amber)]/40"
+                  aria-hidden
+                />
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
