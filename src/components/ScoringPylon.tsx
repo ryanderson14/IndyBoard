@@ -1,11 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { LEAGUE } from "@/config/league";
 import { DRIVERS_BY_ID } from "@/lib/drivers";
 import { useBoard } from "./useBoard";
-
-const FIELD_SIZE = LEAGUE.scoring.fieldSize;
 
 /**
  * Indy 500 scoring pylon — rendered as its own "tower" widget pinned to the
@@ -20,27 +17,30 @@ const FIELD_SIZE = LEAGUE.scoring.fieldSize;
  */
 export function ScoringPylon() {
   const { data } = useBoard();
+  const league = data?.league;
+  const fieldSize = league?.scoring.fieldSize ?? 33;
 
   // driverId -> family color (uses the driver's livery as the family identity)
   const familyColors = useMemo(() => {
     const map = new Map<string, string>();
-    for (const p of LEAGUE.players) {
+    if (!league) return map;
+    for (const p of league.players) {
       const drv = DRIVERS_BY_ID[p.driverId];
       if (drv) map.set(p.driverId, drv.color);
     }
     return map;
-  }, []);
+  }, [league]);
 
   // Build position(1..N) -> { car number, driver id } for the current frame
   const field = data?.field ?? [];
   const byPosition = new Map<number, { number: string; id: string }>();
   for (const d of field) {
-    if (d.position >= 1 && d.position <= FIELD_SIZE) {
+    if (d.position >= 1 && d.position <= fieldSize) {
       byPosition.set(d.position, { number: d.number, id: d.id });
     }
   }
 
-  const rows = Array.from({ length: FIELD_SIZE }, (_, i) => i + 1);
+  const rows = Array.from({ length: fieldSize }, (_, i) => i + 1);
   const lap = data?.board.race.lap ?? 0;
   const totalLaps = data?.board.race.totalLaps ?? 0;
 
@@ -95,7 +95,7 @@ export function ScoringPylon() {
           Each row is a fixed slot; only the car number changes as cars overtake. */}
       <ol
         className="grid min-h-0 flex-1 leading-none"
-        style={{ gridTemplateRows: `repeat(${FIELD_SIZE}, minmax(0, 1fr))` }}
+        style={{ gridTemplateRows: `repeat(${fieldSize}, minmax(0, 1fr))` }}
       >
         {rows.map((pos) => {
           const slot = byPosition.get(pos);

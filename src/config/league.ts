@@ -59,18 +59,18 @@ export const LEAGUE: LeagueConfig = {
     { id: "p-joy", name: "Joy", driverId: "car-6", avatar: "/avatars/joy.png" },
     { id: "p-brett", name: "Brett", driverId: "car-12", avatar: "/avatars/brett.png" },
     { id: "p-silas", name: "Silas", driverId: "car-2", avatar: "/avatars/silas.png" },
-    { id: "p-katie", name: "Katie", driverId: "car-31" }
+    { id: "p-katie", name: "Katie", driverId: "car-31"}
   ],
 
   // SMALL FAMILY (5 managers) — each drafts a team of drivers. Points come
   // from driver placement (see scoring below). Roster size is flexible; just
   // list however many each manager drafted.
   teams: [
-    { id: "t-ryan", name: "Ryan's Racers", driverIds: ["car-10", "car-5", "car-15", "car-21", "car-44"] },
-    { id: "t-emily", name: "Emily's Engines", driverIds: ["car-9", "car-27", "car-18", "car-60", "car-24"] },
-    { id: "t-josh", name: "Josh's Juggernauts", driverIds: ["car-12", "car-7", "car-26", "car-11", "car-33"] },
-    { id: "t-dana", name: "Dana's Drafters", driverIds: ["car-2", "car-3", "car-28", "car-14", "car-90"] },
-    { id: "t-chris", name: "Chris's Chargers", driverIds: ["car-8", "car-6", "car-30", "car-66", "car-76"] },
+    { id: "t-ryan", name: "Ryan's Racers", driverIds: ["car-10", "car-5", "car-15", "car-21", "car-44"], avatar: "/avatars/ryan.png"  },
+    { id: "t-adam", name: "Adam's Racers", driverIds: ["car-9", "car-27", "car-18", "car-60", "car-24"], avatar: "/avatars/adam.png"  },
+    { id: "t-daisy", name: "Daisy's Racers", driverIds: ["car-12", "car-7", "car-26", "car-11", "car-33"], avatar: "/avatars/daisy.png"  },
+    { id: "t-kesley", name: "Kesley's Racers", driverIds: ["car-2", "car-3", "car-28", "car-14", "car-90"], avatar: "/avatars/kesley.png"  },
+    { id: "t-mike", name: "Mike's Racers", driverIds: ["car-8", "car-6", "car-30", "car-66", "car-76"], avatar: "/avatars/mike.png"  },
   ],
 
   scoring: {

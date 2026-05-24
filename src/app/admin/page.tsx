@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import type { DataSource, FlagStatus, RaceState } from "@/lib/types";
+import type { LeagueConfig } from "@/config/league";
+import { LeagueEditor } from "@/components/admin/LeagueEditor";
 
 const FLAGS: FlagStatus[] = ["pre", "green", "yellow", "red", "checkered"];
 const SOURCES: DataSource[] = ["mock", "espn", "sportradar", "manual"];
@@ -20,6 +23,8 @@ export default function AdminPage() {
   const [source, setSource] = useState<DataSource>("mock");
   const [storeBackend, setStoreBackend] = useState("");
   const [race, setRace] = useState<RaceState | null>(null);
+  const [league, setLeague] = useState<LeagueConfig | null>(null);
+  const [leagueOverridden, setLeagueOverridden] = useState(false);
   const [msg, setMsg] = useState("");
 
   const call = useCallback(
@@ -47,7 +52,30 @@ export default function AdminPage() {
     setSource(data.source);
     setStoreBackend(data.storeBackend);
     setRace(data.race);
+    setLeague(data.league);
+    setLeagueOverridden(!!data.leagueOverridden);
     setMsg(`Loaded (${data.storeBackend} store)`);
+  }, [call]);
+
+  const saveLeague = useCallback(
+    async (next: LeagueConfig) => {
+      const data = await call({ action: "saveLeague", league: next });
+      if (data?.league) {
+        setLeague(data.league);
+        setLeagueOverridden(true);
+        setMsg("League saved");
+      }
+    },
+    [call],
+  );
+
+  const resetLeague = useCallback(async () => {
+    const data = await call({ action: "resetLeague" });
+    if (data?.league) {
+      setLeague(data.league);
+      setLeagueOverridden(false);
+      setMsg("League reset to file seed");
+    }
   }, [call]);
 
   const setSrc = async (s: DataSource) => {
@@ -119,9 +147,23 @@ export default function AdminPage() {
         md:pl-[124px] lg:pl-[168px] xl:pl-[196px] 2xl:pl-[228px]
       "
     >
-      <header className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+      <header className="flex flex-wrap items-end justify-between gap-3 border-b border-white/[0.06] pb-3">
         <div>
-          <span className="hud-tag">Race Control</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/"
+              className="rounded-[3px] bg-rail px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-ink-dim hover:text-ink"
+            >
+              ← Dashboard
+            </Link>
+            <Link
+              href="/tv"
+              className="rounded-[3px] bg-rail px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-ink-dim hover:text-ink"
+            >
+              📺 TV
+            </Link>
+            <span className="hud-tag">Race Control</span>
+          </div>
           <h1 className="mt-2 font-display text-3xl font-black italic uppercase">
             Race Control
           </h1>
@@ -255,6 +297,16 @@ export default function AdminPage() {
           drive the family boards.
         </p>
       </section>
+
+      {league && (
+        <LeagueEditor
+          initialLeague={league}
+          overridden={leagueOverridden}
+          onSave={saveLeague}
+          onReset={resetLeague}
+          key={`${leagueOverridden}-${league.players.length}-${league.teams.length}`}
+        />
+      )}
     </main>
   );
 }

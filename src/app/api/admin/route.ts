@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { DataSource, RaceState } from "@/lib/types";
+import type { LeagueConfig } from "@/config/league";
 import { DATA_SOURCE_KEY, resolveSource } from "@/lib/datasource";
 import { MANUAL_RACE_KEY, blankManualRace } from "@/lib/datasource/manual";
 import { kvGet, kvSet, STORE_BACKEND } from "@/lib/store";
+import { getLeague, saveLeague, resetLeague, LEAGUE_CONFIG_KEY } from "@/lib/league-store";
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +20,18 @@ async function currentManualRace(): Promise<RaceState> {
 
 export async function GET(req: NextRequest) {
   if (!authed(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const [source, race, league, override] = await Promise.all([
+    resolveSource(),
+    currentManualRace(),
+    getLeague(),
+    kvGet<LeagueConfig>(LEAGUE_CONFIG_KEY),
+  ]);
   return NextResponse.json({
-    source: await resolveSource(),
+    source,
     storeBackend: STORE_BACKEND,
-    race: await currentManualRace(),
+    race,
+    league,
+    leagueOverridden: override !== null,
   });
 }
 
@@ -75,6 +85,21 @@ export async function POST(req: NextRequest) {
     case "reset": {
       await kvSet(MANUAL_RACE_KEY, blankManualRace());
       return NextResponse.json({ ok: true });
+    }
+
+    case "saveLeague": {
+      const league = body.league as LeagueConfig;
+      if (!league || !Array.isArray(league.players) || !Array.isArray(league.teams)) {
+        return NextResponse.json({ error: "invalid league" }, { status: 400 });
+      }
+      await saveLeague(league);
+      return NextResponse.json({ ok: true, league });
+    }
+
+    case "resetLeague": {
+      await resetLeague();
+      const league = await getLeague();
+      return NextResponse.json({ ok: true, league });
     }
 
     default:
